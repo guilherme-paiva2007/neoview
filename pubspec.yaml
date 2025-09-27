@@ -1,0 +1,60 @@
+name: neoview
+description: "Aplicação móvel complementar ao dispositivo de visão computacional Óculos NeoView."
+publish_to: 'none'
+version: 1.0.0-alpha.1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dart_tools:
+    path: packages/dart_tools
+  flutter_tools:
+    path: packages/flutter_tools
+  font_awesome_flutter: 10.9.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+
+  adaptative_icon_background: "#FFFFFF"
+
+  image_path: "assets/icons/white.png"
+
+  web:
+    generate: true
+    image_path: "assets/icons/white.png"
+
+  windows:
+    generate: true
+    image_path: "assets/icons/white.png"
+  
+  macos:
+    generate: true
+    image_path: "assets/icons/white.png"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+  rename: ^3.1.0
+
+flutter:
+  uses-material-design: true
+
+  # assets:
+    # - assets/icons/logo
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Montserrat-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+

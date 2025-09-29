@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neoview/core/constants/colors.dart';
+import 'package:neoview/core/constants/sizes.dart';
 
 class AppDrawerButton extends StatelessWidget {
   const AppDrawerButton({super.key});
@@ -12,7 +13,15 @@ class AppDrawerButton extends StatelessWidget {
       onTap: () {
         Scaffold.of(context).openDrawer();
       },
-      child: const Center(child: FaIcon(FontAwesomeIcons.bars, color: AppColors.blue, size: 36,)),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: kScreenPadding,
+          ),
+          Center(child: FaIcon(FontAwesomeIcons.bars, color: AppColors.blue, size: 36,)),
+        ],
+      ),
     );
   }
 }

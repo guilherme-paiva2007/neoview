@@ -78,6 +78,7 @@ enum AppRoutes {
   });
 
   static String initNavigation(AppRoutes route) {
+    navigationStyle(navigationBarBrightness: route.navigationBar, statusBarBrightness: route.statusBar);
     if (_stack.isNotEmpty) return route.name;
     _stack.add(route);
     initialRoute = route;

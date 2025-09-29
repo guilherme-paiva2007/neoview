@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:neoview/core/utils/navigation_style.dart';
 import 'package:neoview/screens/home.dart';
@@ -43,10 +45,12 @@ enum AppRoutes {
   bool popAndStack(BuildContext context) {
     if (currentRoute == this) return false;
     navigationStyle(statusBarBrightness: statusBar, navigationBarBrightness: navigationBar);
-    _stack.removeLast();
+    if (_stack.isNotEmpty) _stack.removeLast();
     _stack.add(this);
     currentRoute = this;
-    Navigator.of(context)..pop()..pushNamed(name);
+    final navigator = Navigator.of(context);
+    if (navigator.canPop()) navigator.pop();
+    navigator.pushNamed(name);
     return true;
   }
 
@@ -67,11 +71,14 @@ enum AppRoutes {
   static late AppRoutes initialRoute;
   static late AppRoutes currentRoute;
 
+  static final UnmodifiableListView<AppRoutes> stackView = UnmodifiableListView(_stack);
+
   static final Map<String, Widget Function(BuildContext)> routes = Map.unmodifiable({
     for (var route in AppRoutes.values) route.name: route.getRoute
   });
 
   static String initNavigation(AppRoutes route) {
+    if (_stack.isNotEmpty) return route.name;
     _stack.add(route);
     initialRoute = route;
     currentRoute = route;

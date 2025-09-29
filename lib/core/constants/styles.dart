@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show TextStyle, FontWeight;
+import 'package:flutter/material.dart' show BorderSide, FontWeight, TextStyle;
 import 'package:neoview/core/constants/colors.dart';
 
 abstract final class AppTextStyles {
@@ -11,6 +11,11 @@ abstract final class AppTextStyles {
   );
   static const label = TextStyle(
     fontSize: 16,
+    height: 1
+  );
+
+  static const mainText = TextStyle(
+    fontSize: 20,
   );
 
   static const title = TextStyle(
@@ -22,16 +27,31 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.bold,
   );
   static const button = TextStyle(
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.bold,
     color: AppColors.white,
   );
   static const hollowButton = TextStyle(
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.bold,
   );
   static const article = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.bold,
+  );
+}
+
+abstract final class AppBorders {
+  static const underline = BorderSide(
+    width: 3,
+    color: AppColors.blue,
+  );
+  static const underlineRed = BorderSide(
+    width: 3,
+    color: AppColors.red
+  );
+  static const underlineGrey = BorderSide(
+    width: 3,
+    color: AppColors.grey
   );
 }

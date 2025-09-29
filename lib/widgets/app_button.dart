@@ -1,40 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neoview/core/constants/colors.dart';
 import 'package:neoview/core/constants/sizes.dart';
 import 'package:neoview/core/constants/styles.dart';
 
 class AppButton extends StatelessWidget {
-  final bool _hollow;
+  final bool enabled;
+  final bool hollow;
   final Widget child;
   final void Function(BuildContext context) onClick;
   
-  const AppButton({ super.key, required this.onClick, required this.child }): _hollow = false;
-  const AppButton.hollow({ super.key, required this.onClick, required this.child }): _hollow = true;
+  const AppButton({ super.key, this.enabled = true, required this.onClick, this.hollow = false, required this.child });
+  const factory AppButton.squared({ Key key, bool enabled, required void Function(BuildContext) onClick, bool hollow, required Widget child }) = _AppSquaredButton;
 
-  ButtonStyle get _style => _hollow ? _borderButtonStyle : _buttonStyle;
+  ButtonStyle get _style => hollow ? _borderButtonStyle : _buttonStyle;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => onClick(context),
+      onPressed: enabled ? () => onClick(context) : null,
       style: _style,
       child: child
     );
   }
 }
 
-class AppSquaredButton extends AppButton {
-  final IconData icon;
+class _AppSquaredButton extends AppButton {
+  @override
+  Widget get child => Center(child: super.child);
 
   @override
-  Widget get child => Center(child: FaIcon(icon));
+  ButtonStyle get _style => hollow ? _borderButtonStyleNoPadding : _buttonStyleNoPadding;
 
-  @override
-  ButtonStyle get _style => _hollow ? _borderButtonStyleNoPadding : _buttonStyleNoPadding;
-
-  const AppSquaredButton({ super.key, required super.onClick, required this.icon }): super(child: const Placeholder());
-  const AppSquaredButton.hollow({ super.key, required super.onClick, required this.icon }): super.hollow(child: const Placeholder());
+  const _AppSquaredButton({
+    super.key,
+    super.enabled,
+    super.hollow,
+    required super.onClick,
+    required super.child
+  }): super();
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +55,50 @@ class AppSquaredButton extends AppButton {
 }
 
 const _defaultButtonStyle = ButtonStyle(
-  padding: WidgetStatePropertyAll(AppPaddings.small),
+  padding: WidgetStatePropertyAll(AppPaddings.big),
   iconSize: WidgetStatePropertyAll(18),
-  shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: AppBorderRadius.medium)),
+  shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: AppBorderRadius.big)),
 );
+
+Widget Function(BuildContext, Set<WidgetState>, Widget?) _fullBackgroundBuilderGenerator({
+  required Map<WidgetState, Border> borders,
+  required Map<WidgetState, Color> backgrounds,
+}) {
+  return (context, states, child) {
+    final priorityState = _getPriorityState(states);
+    return AnimatedContainer(
+      duration: kThemeAnimationDuration,
+      decoration: BoxDecoration(
+        border: borders[priorityState] ?? _anyBorder,
+        borderRadius: AppBorderRadius.big,
+        color: backgrounds[priorityState] ?? _anyBackground,
+      ),
+      child: child,
+    );
+  };
+}
+
+Widget Function(BuildContext, Set<WidgetState>, Widget?) _borderBackgroundBuilderGenerator({
+  required Map<WidgetState, Border> borders,
+  required Map<WidgetState, Color> backgrounds,
+}) {
+  return (context, states, child) {
+    final priorityState = _getPriorityState(states);
+    return AnimatedContainer(
+      duration: kThemeAnimationDuration,
+      decoration: BoxDecoration(
+        border: borders[priorityState] ?? _anyBorder,
+        borderRadius: AppBorderRadius.big,
+        color: states.contains(WidgetState.hovered)
+          || states.contains(WidgetState.pressed)
+          || states.contains(WidgetState.focused) ?
+            backgrounds[priorityState] ?? _anyTranslucentBackground :
+            Colors.transparent,
+      ),
+      child: child,
+    );
+  };
+}
 
 final _buttonStyle = _defaultButtonStyle.copyWith(
   textStyle: const WidgetStatePropertyAll(AppTextStyles.button),
@@ -65,43 +108,12 @@ final _buttonStyle = _defaultButtonStyle.copyWith(
     WidgetState.pressed: AppColors.grey.shade100,
     WidgetState.any: AppColors.white,
   }),
-  backgroundBuilder: (context, states, child) {
-    final priorityState = _getPriorityState(states);
-    return AnimatedContainer(
-      duration: kThemeAnimationDuration,
-      decoration: BoxDecoration(
-        border: _borders[priorityState] ?? _anyBorder,
-        borderRadius: AppBorderRadius.medium,
-        color: _backgrounds[priorityState] ?? _anyBackground,
-      ),
-      child: child,
-    );
-  },
+  backgroundBuilder: _fullBackgroundBuilderGenerator(borders: _borders, backgrounds: _backgrounds)
 );
 
 final _borderButtonStyle = _defaultButtonStyle.copyWith(
   textStyle: const WidgetStatePropertyAll(AppTextStyles.hollowButton),
-  backgroundBuilder: (context, states, child) {
-    final priorityState = _getPriorityState(states);
-    return Material(
-      child: InkWell(
-        overlayColor: WidgetStatePropertyAll(AppColors.white),
-        child: AnimatedContainer(
-          duration: kThemeAnimationDuration,
-          decoration: BoxDecoration(
-            border: _borders[priorityState] ?? _anyBorder,
-            borderRadius: AppBorderRadius.medium,
-            color: states.contains(WidgetState.hovered)
-              || states.contains(WidgetState.pressed)
-              || states.contains(WidgetState.focused) ?
-                _backgrounds[priorityState] ?? _anyBackground :
-                Colors.transparent,
-          ),
-          child: child,
-        ),
-      ),
-    );
-  },
+  backgroundBuilder: _borderBackgroundBuilderGenerator(borders: _borders, backgrounds: _translucentBackgrounds)
 );
 
 final _buttonStyleNoPadding = _buttonStyle.copyWith(
@@ -157,4 +169,10 @@ final _backgrounds = {
   WidgetState.focused: AppColors.blue.shade600,
 };
 
+final _translucentBackgrounds = _backgrounds.map((key, value) {
+  return MapEntry(key, value.withAlpha(64));
+},);
+
 final _anyBackground = AppColors.blue;
+
+final _anyTranslucentBackground = AppColors.blue.withAlpha(64);

@@ -6,13 +6,16 @@ import 'package:neoview/core/constants/styles.dart';
 class AppButton extends StatelessWidget {
   final bool enabled;
   final bool hollow;
+  final bool small;
   final Widget child;
   final void Function(BuildContext context) onClick;
   
-  const AppButton({ super.key, this.enabled = true, required this.onClick, this.hollow = false, required this.child });
+  const AppButton({ super.key, this.enabled = true, this.small = false, required this.onClick, this.hollow = false, required this.child });
   const factory AppButton.squared({ Key key, bool enabled, required void Function(BuildContext) onClick, bool hollow, required Widget child }) = _AppSquaredButton;
 
-  ButtonStyle get _style => hollow ? _borderButtonStyle : _buttonStyle;
+  ButtonStyle get _style => hollow
+    ? (small ? _borderButtonStyleSmallPadding : _borderButtonStyle)
+    : (small ? _buttonStyleSmallPadding : _buttonStyle);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,9 @@ class _AppSquaredButton extends AppButton {
   Widget get child => Center(child: super.child);
 
   @override
-  ButtonStyle get _style => hollow ? _borderButtonStyleNoPadding : _buttonStyleNoPadding;
+  ButtonStyle get _style => hollow
+    ? _borderButtonStyleNoPadding
+    : _buttonStyleNoPadding;
 
   const _AppSquaredButton({
     super.key,
@@ -117,11 +122,21 @@ final _borderButtonStyle = _defaultButtonStyle.copyWith(
 );
 
 final _buttonStyleNoPadding = _buttonStyle.copyWith(
-  padding: WidgetStatePropertyAll(AppPaddings.tiny),
+  padding: const WidgetStatePropertyAll(AppPaddings.tiny),
 );
 
 final _borderButtonStyleNoPadding = _borderButtonStyle.copyWith(
-  padding: WidgetStatePropertyAll(AppPaddings.tiny),
+  padding: const WidgetStatePropertyAll(AppPaddings.tiny),
+);
+
+final _buttonStyleSmallPadding = _buttonStyle.copyWith(
+  padding: const WidgetStatePropertyAll(AppPaddings.small),
+  textStyle: const WidgetStatePropertyAll(AppTextStyles.smallButton),
+);
+
+final _borderButtonStyleSmallPadding = _borderButtonStyle.copyWith(
+  padding: const WidgetStatePropertyAll(AppPaddings.small),
+  textStyle: const WidgetStatePropertyAll(AppTextStyles.smallButton),
 );
 
 WidgetStatesConstraint _getPriorityState(Set<WidgetState> states) {

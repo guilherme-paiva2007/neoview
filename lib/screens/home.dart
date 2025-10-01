@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:neoview/core/constants/sizes.dart';
 import 'package:neoview/core/constants/styles.dart';
 import 'package:neoview/core/navigation.dart';
+import 'package:neoview/widgets/app_app_bar.dart';
 import 'package:neoview/widgets/app_button.dart';
 import 'package:neoview/widgets/app_drawer.dart';
-import 'package:neoview/widgets/drawer_button.dart';
 import 'package:neoview/widgets/underline_text.dart';
 
 class Home extends StatefulWidget {
@@ -18,9 +18,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: AppDrawerButton()
-      ),
+      onDrawerChanged: drawerNavigationStyler,
+      appBar: AppAppBar(),
       drawer: AppDrawer(),
       body: SafeArea(
         child: Padding(
@@ -28,18 +27,24 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 16,
+            spacing: 0,
             children: [
               const UnderlineText("Olá, Cliente"),
               Center(child: Padding(
                 padding: AppPaddings.bigger,
-                child: Image.asset("assets/images/photo_device_1.png"),
+                child: Image.asset(
+                  "assets/images/photo_device_1.png",
+                  fit: BoxFit.contain,
+                  width: View.of(context).display.size.width * 0.6,
+                ),
               )),
               SizedBox(),
-              const Text(
-                "Bem-vindo ao aplicativo do NeoView, seu óculos inteligente que transforma acessibilidade em independência.",
-                textAlign: TextAlign.justify,
-                style: AppTextStyles.mainText,
+              const SingleChildScrollView(
+                child: Text(
+                  "Bem-vindo ao aplicativo do NeoView, seu óculos inteligente que transforma acessibilidade em independência.",
+                  textAlign: TextAlign.justify,
+                  style: AppTextStyles.mainText,
+                ),
               ),
               Expanded(
                 child: Column(

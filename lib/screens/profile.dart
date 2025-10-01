@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tools/form_validator.dart';
+import 'package:flutter_tools/screen_observer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neoview/core/constants/colors.dart';
 import 'package:neoview/core/constants/rules.dart';
@@ -15,12 +16,29 @@ class Profile extends StatefulWidget {
   State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<Profile> with WidgetsBindingObserver, ScreenObserver {
   final InputEdittingController<String> nameController = InputEdittingController("", AppRules.name);
   final InputEdittingController<String> emailController = InputEdittingController("", AppRules.email);
   final InputEdittingController<String> oldPasswordController = InputEdittingController("", AppRules.password);
   final InputEdittingController<String> newPasswordController = InputEdittingController("", AppRules.password);
   final InputEdittingController<String> confirmPasswordController = InputEdittingController("", AppRules.password);
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void onKeyboardOpen() => setState(() {});
+  @override
+  void onKeyboardClose() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -53,71 +71,86 @@ class _ProfileState extends State<Profile> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(0xFFE1E1E1),
-                            ),
-                            padding: AppPaddings.medium,
-                            child: const SizedBox.square(
-                              dimension: 192,
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: keyboardState == KeyboardState.closed ? const EdgeInsets.symmetric(
+                          vertical: 16
+                        ) : EdgeInsets.zero,
+                        child: Column(
+                          children: [
+                            AnimatedContainer(
+                              duration: kThemeAnimationDuration,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFE1E1E1),
+                              ),
+                              height: keyboardState == KeyboardState.closed ? 152 : 0,
+                              padding: AppPaddings.medium,
+                              /// icone não some quando circulo some
+                              clipBehavior: Clip.hardEdge,
                               child: Center(
                                 child: FaIcon(
                                   FontAwesomeIcons.solidUser,
-                                  size: 128,
+                                  size: 84,
                                   color: Color(0xFF3C3C3C),
                                 ),
                               ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              
-                            },
-                            child: const Text(
-                              "Alterar foto",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color(0xFF505050)
+                            Visibility(
+                              visible: keyboardState == KeyboardState.closed,
+                              child: TextButton(
+                                onPressed: () {
+                                  
+                                },
+                                child: const Text(
+                                  "Alterar foto",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color(0xFF505050)
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    AppTextInput(
-                      label: "Nome",
-                      leading: FontAwesomeIcons.signature,
-                    ),
-                    AppTextInput(
-                      label: "E-mail",
-                      leading: FontAwesomeIcons.solidEnvelope,
-                    ),
-                    AppTextInput(
-                      label: "Senha atual",
-                      leading: FontAwesomeIcons.lock,
-                    ),
-                    AppTextInput(
-                      label: "Nova senha",
-                      leading: FontAwesomeIcons.lock,
-                    ),
-                    AppTextInput(
-                      label: "Confirmar nova senha",
-                      leading: FontAwesomeIcons.lock,
-                    ),
-                  ],
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AppTextInput(
+                                label: "Nome",
+                                leading: FontAwesomeIcons.signature,
+                              ),
+                              AppTextInput(
+                                label: "E-mail",
+                                leading: FontAwesomeIcons.solidEnvelope,
+                              ),
+                              AppTextInput(
+                                label: "Senha atual",
+                                leading: FontAwesomeIcons.lock,
+                              ),
+                              AppTextInput(
+                                label: "Nova senha",
+                                leading: FontAwesomeIcons.lock,
+                              ),
+                              AppTextInput(
+                                label: "Confirmar nova senha",
+                                leading: FontAwesomeIcons.lock,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,

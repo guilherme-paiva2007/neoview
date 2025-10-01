@@ -3,9 +3,9 @@ import 'package:neoview/core/constants/colors.dart';
 import 'package:neoview/core/constants/sizes.dart';
 import 'package:neoview/core/constants/styles.dart';
 import 'package:neoview/core/navigation.dart';
+import 'package:neoview/widgets/app_app_bar.dart';
 import 'package:neoview/widgets/app_button.dart';
 import 'package:neoview/widgets/app_drawer.dart';
-import 'package:neoview/widgets/drawer_button.dart';
 import 'package:neoview/widgets/underline_text.dart';
 
 class Instructions extends StatefulWidget {
@@ -19,17 +19,31 @@ class _InstructionsState extends State<Instructions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: AppDrawerButton(),
+      onDrawerChanged: drawerNavigationStyler,
+      appBar: AppAppBar(
         actions: [
-          AppButton(onClick: (context) {
-            AppRoutes.pair.popAndStack(context);
-          }, child: const Text("Conectar NeoView")),
-          SizedBox(
-            width: kScreenPadding,
+          AppButton(
+            small: true,
+            onClick: (context) {
+              
+            },
+            child: const Text("Conectar NeoView")
           )
         ],
       ),
+      // appBar: AppBar(
+      //   leading: AppDrawerButton(),
+      //   backgroundColor: AppColors.white,
+      //   surfaceTintColor: AppColors.white,
+      //   actions: [
+      //     AppButton(onClick: (context) {
+      //       AppRoutes.pair.popAndStack(context);
+      //     }, child: const Text("Conectar NeoView")),
+      //     SizedBox(
+      //       width: kScreenPadding,
+      //     )
+      //   ],
+      // ),
       drawer: AppDrawer(),
       body: SingleChildScrollView(
         child: Column(

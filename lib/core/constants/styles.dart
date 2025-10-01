@@ -31,6 +31,11 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: AppColors.white,
   );
+  static const smallButton = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.white,
+  );
   static const hollowButton = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold,

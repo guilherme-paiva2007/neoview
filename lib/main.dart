@@ -38,6 +38,7 @@ class MainApp extends StatelessWidget {
       routes: AppRoutes.routes,
       initialRoute: AppRoutes.initNavigation(AppRoutes.login),
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [PopObserver()],
     );
   }
 }

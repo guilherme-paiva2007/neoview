@@ -22,20 +22,20 @@ flutter_launcher_icons:
 
   adaptive_icon_background: "#000000"
 
-  adaptive_icon_foreground: "assets/icons/white.png"
-  image_path: "assets/icons/white.png"
+  adaptive_icon_foreground: "assets/icons/white_spaced.png"
+  image_path: "assets/icons/white_spaced.png"
 
   web:
     generate: true
-    image_path: "assets/icons/white.png"
+    image_path: "assets/icons/white_spaced.png"
 
   windows:
     generate: true
-    image_path: "assets/icons/white.png"
+    image_path: "assets/icons/white_spaced.png"
   
   macos:
     generate: true
-    image_path: "assets/icons/white.png"
+    image_path: "assets/icons/white_spaced.png"
 
 dev_dependencies:
   flutter_test:

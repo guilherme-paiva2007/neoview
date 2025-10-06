@@ -3,6 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neoview/core/constants/colors.dart';
 import 'package:neoview/core/constants/sizes.dart';
 import 'package:neoview/core/navigation.dart';
+import 'package:neoview/widgets/app_button.dart';
+import 'package:neoview/widgets/app_dialog.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -10,6 +12,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      semanticLabel: "Menu de navegação",
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.zero,
         side: BorderSide.none,
@@ -26,13 +29,15 @@ class AppDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 spacing: 24,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    spacing: 8,
-                    children: [
-                      Image.asset("assets/icons/white.png", width: 48,),
-                      const Text("NEOVIEW", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.white),),
-                    ],
+                  ExcludeSemantics(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      spacing: 8,
+                      children: [
+                        Image.asset("assets/icons/white.png", width: 48,),
+                        const Text("NEOVIEW", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.white),),
+                      ],
+                    ),
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -91,13 +96,16 @@ class AppDrawer extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Usuário", style: const TextStyle(
-                                color: AppColors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16
-                              ),),
+                              ExcludeSemantics(
+                                child: Text("Usuário", style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16
+                                ),),
+                              ),
                               Semantics(
-                                onTap: () => _buttonForProfile._navigate(context),
+                                button: true,
+                                label: "Ir para perfil",
                                 child: GestureDetector(
                                   onTap: () => _buttonForProfile._navigate(context),
                                   child: const ExcludeSemantics(
@@ -122,8 +130,7 @@ class AppDrawer extends StatelessWidget {
                         ],
                       ),
                       Semantics(
-                        label: "",
-                        onTap: () => _logout(context),
+                        label: "Sair da conta",
                         button: true,
                         child: GestureDetector(
                           behavior: HitTestBehavior.translucent,
@@ -149,7 +156,30 @@ const _DrawerButton _buttonForProfile = _DrawerButton(
   route: AppRoutes.profile
 );
 
-void _logout(BuildContext context) => AppRoutes.login.resetTo(context);
+void _logout(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AppDialog(
+        icon: FontAwesomeIcons.exclamation,
+        title: "Confirmar saída",
+        body: const Text("Tem certeza que deseja sair de sua conta?"),
+        actions: [
+          AppButton(
+            small: true,
+            onClick: (context) => AppRoutes.login.resetTo(context),
+            child: const Text("Sair")
+          ),
+          AppButton(
+            small: true,
+            onClick: (context) => Navigator.of(context).pop(),
+            child: const Text("Cancelar")
+          )
+        ],
+      );
+    },
+  );
+}
 
 class _DrawerButton extends StatelessWidget {
   final IconData icon;
@@ -181,31 +211,34 @@ class _DrawerButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       label: "Navegar para $text",
+      hint: route == AppRoutes.currentRoute ? "Você já está nesta tela" : null,
       button: true,
-      onTap: () => _navigate(context),
+      enabled: route != AppRoutes.currentRoute,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => _navigate(context),
-        child: Container(
-          decoration: route == AppRoutes.currentRoute
-            ? const BoxDecoration(
-              borderRadius: AppBorderRadius.small,
-              color: Color(0x3B797979)
-            )
-            : const BoxDecoration(
-              borderRadius: AppBorderRadius.small
-            ),
-          padding: AppPaddings.small,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 8,
-            children: [
-              SizedBox.square(
-                dimension: 32,
-                child: Center(child: FaIcon(icon, size: 24, color: AppColors.white,)),
+        child: ExcludeSemantics(
+          child: Container(
+            decoration: route == AppRoutes.currentRoute
+              ? const BoxDecoration(
+                borderRadius: AppBorderRadius.small,
+                color: Color(0x3B797979)
+              )
+              : const BoxDecoration(
+                borderRadius: AppBorderRadius.small
               ),
-              Text(text, style: const TextStyle(color: AppColors.white, fontSize: 16),),
-            ],
+            padding: AppPaddings.small,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 8,
+              children: [
+                SizedBox.square(
+                  dimension: 32,
+                  child: Center(child: FaIcon(icon, size: 24, color: AppColors.white,)),
+                ),
+                Text(text, style: const TextStyle(color: AppColors.white, fontSize: 16),),
+              ],
+            ),
           ),
         ),
       ),

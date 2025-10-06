@@ -29,7 +29,10 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 0,
             children: [
-              const UnderlineText("Olá, Cliente"),
+              Semantics(
+                label: "Tela inicial NeoView",
+                child: const ExcludeSemantics(child: UnderlineText("Olá, Cliente"))
+              ),
               Center(child: Padding(
                 padding: AppPaddings.bigger,
                 child: Image.asset(

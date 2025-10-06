@@ -49,7 +49,11 @@ class _PairState extends State<Pair> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 8,
                   children: [
-                    const Text("Disparar funções", style: AppTextStyles.subtitle,),
+                    const Text(
+                      "Disparar funções",
+                      semanticsLabel: "Disparar funções do óculos",
+                      style: AppTextStyles.subtitle,
+                    ),
                     Flexible(
                       child: IntrinsicHeight(
                         child: SingleChildScrollView(
@@ -133,73 +137,79 @@ class _NeoViewGlassesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        border: Border.fromBorderSide(AppBorders.underline),
-        borderRadius: AppBorderRadius.big
-      ),
-      padding: AppPaddings.big,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Image.asset("assets/images/photo_device_1.png"),
-          ),
-          Expanded(
-            flex: 6,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 12,
-              children: [
-                Row(
-                  spacing: 8,
-                  children: [
-                    Text("Óculos", style: AppTextStyles.subtitle,),
-                    Semantics(
-                      button: true,
+    return Semantics(
+      label: "Óculos NeoView não conectado",
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          border: Border.fromBorderSide(AppBorders.underline),
+          borderRadius: AppBorderRadius.big
+        ),
+        padding: AppPaddings.big,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Image.asset("assets/images/photo_device_1.png"),
+            ),
+            Expanded(
+              flex: 6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12,
+                children: [
+                  Row(
+                    spacing: 8,
+                    children: [
+                      Text("Óculos", semanticsLabel: "Nome: Óculos", style: AppTextStyles.subtitle,),
+                      Semantics(
+                        label: "Editar nome",
+                        button: true,
+                        child: GestureDetector(
+                          onTap: () {
+                            
+                          },
+                          child: const FaIcon(FontAwesomeIcons.pencil, size: 24,),
+                        ),
+                      )
+                    ],
+                  ),
+                  Semantics(
+                    label: "Bateria em 100%",
+                    child: ExcludeSemantics(
+                      child: Row(
+                        spacing: 4,
+                        children: [
+                          const FaIcon(FontAwesomeIcons.batteryFull, color: Colors.lightGreenAccent, size: 20,),
+                          Text("100%", style: AppTextStyles.bold,),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Semantics(
+                    label: "Conectar ao óculos",
+                    button: true,
+                    child: GestureDetector(
                       onTap: () {
                         
                       },
-                      child: GestureDetector(
-                        onTap: () {
-                          
-                        },
-                        child: const FaIcon(FontAwesomeIcons.pencil, size: 24,),
+                      child: ExcludeSemantics(
+                        child: const Text("Conectar", style: TextStyle(
+                          color: AppColors.blue,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                        ),),
                       ),
-                    )
-                  ],
-                ),
-                Row(
-                  spacing: 4,
-                  children: [
-                    const FaIcon(FontAwesomeIcons.batteryFull, color: Colors.lightGreenAccent, size: 20,),
-                    Text("100%", style: AppTextStyles.bold,),
-                  ],
-                ),
-                Semantics(
-                  button: true,
-                  onTap: () {
-                    
-                  },
-                  child: GestureDetector(
-                    onTap: () {
-                      
-                    },
-                    child: const Text("Conectar", style: TextStyle(
-                      color: AppColors.blue,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
-                    ),),
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

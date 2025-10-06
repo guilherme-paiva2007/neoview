@@ -29,7 +29,9 @@ class AppTextInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (label != null) Text(label!, style: AppTextStyles.label,),
+        if (label != null) ExcludeSemantics(
+          child: Text(label!, style: AppTextStyles.label, semanticsLabel: "",)
+        ),
         TextFormField(
           onChanged: (value) {
             controller?.value = value;
@@ -43,6 +45,16 @@ class AppTextInput extends StatelessWidget {
           textAlignVertical: TextAlignVertical.center,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
+            // labelText: label,
+            // labelStyle: const TextStyle(
+            //   fontSize: 0,
+            //   height: 0
+            // ),
+            hintText: label,
+            hintStyle: const TextStyle(
+              fontSize: 0,
+              height: 0
+            ),
             enabled: !disabled,
             border: const UnderlineInputBorder(borderSide: AppBorders.underline),
             enabledBorder: const UnderlineInputBorder(borderSide: AppBorders.underline),
@@ -51,27 +63,31 @@ class AppTextInput extends StatelessWidget {
             focusedErrorBorder: const UnderlineInputBorder(borderSide: AppBorders.underlineRed),
             contentPadding: AppPaddings.small,
             isDense: true,
-            helperText: " ",
+            helperText: "",
             visualDensity: VisualDensity.compact,
             prefixIconColor: AppColors.black,
             prefixIcon: leading == null ? null : SizedBox(
               height: 20,
               width: 20,
-              child: Center(child: FaIcon(leading))
+              child: Center(child: FaIcon(leading,))
             ),
             suffixIconColor: AppColors.black,
-            suffixIcon: secret == null ? null : GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () {
-                secret!.value = !secret!.value;
-              },
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: Center(
-                  child: secret!.value
-                    ? const FaIcon(FontAwesomeIcons.solidEyeSlash, size: 16,)
-                    : const FaIcon(FontAwesomeIcons.solidEye, size: 16,),
+            suffixIcon: secret == null ? null : Semantics(
+              checked: !secret!.value,
+              label: "Mostrar o conteúdo",
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  secret!.value = !secret!.value;
+                },
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: Center(
+                    child: secret!.value
+                      ? const FaIcon(FontAwesomeIcons.solidEyeSlash, size: 16,)
+                      : const FaIcon(FontAwesomeIcons.solidEye, size: 16,),
+                  ),
                 ),
               ),
             ),

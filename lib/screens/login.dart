@@ -73,22 +73,24 @@ class _LoginState extends State<Login> with WidgetsBindingObserver, ScreenObserv
               height: constraints.maxHeight,
               child: Stack(
                 children: [
-                  Container(
-                    height: keyboardClosed ? upper2 : 0,
-                    width: constraints.maxWidth,
-                    color: AppColors.blue,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 12,
-                        children: [
-                          Image.asset("assets/icons/white.png", width: 96,),
-                          const Text("NEOVIEW", style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),),
-                        ],
+                  ExcludeSemantics(
+                    child: Container(
+                      height: keyboardClosed ? upper2 : 0,
+                      width: constraints.maxWidth,
+                      color: AppColors.blue,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 12,
+                          children: [
+                            Image.asset("assets/icons/white.png", width: 96,),
+                            const Text("NEOVIEW", style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.white,
+                            ),),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -122,7 +124,10 @@ class _LoginState extends State<Login> with WidgetsBindingObserver, ScreenObserv
                                 ),
                               ),
                               padding: const EdgeInsets.only(bottom: 4, left: 4, right: 8),
-                              child: const Text("Entrar", style: AppTextStyles.title,),
+                              child: Semantics(
+                                label: "Entrar na sua conta NeoView",
+                                child: const ExcludeSemantics(child: Text("Entrar", style: AppTextStyles.title,))
+                              ),
                             ),
                           ],
                         ),
@@ -160,6 +165,7 @@ class _LoginState extends State<Login> with WidgetsBindingObserver, ScreenObserv
                                     builder: (context, value, child) {
                                       return AppButton(
                                         enabled: value,
+                                        hint: "Preencha todos os campos para ativar",
                                         onClick: (context) {
                                           AppRoutes.home.resetTo(context);
                                         },
@@ -170,24 +176,31 @@ class _LoginState extends State<Login> with WidgetsBindingObserver, ScreenObserv
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Não possui uma conta? ", style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontWeight: FontWeight.w500
-                                ),),
-                                GestureDetector(
-                                  onTap: () {
-                                    AppRoutes.register.stack(context);
-                                  },
-                                  child: const Text("Cadastre-se", style: TextStyle(
-                                    color: AppColors.blue,
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w500
-                                  ),),
-                                )
-                              ],
+                            Semantics(
+                              button: true,
+                              label: "Navegar para Cadastro",
+                              onTap: () => AppRoutes.register.stack(context),
+                              child: ExcludeSemantics(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("Não possui uma conta? ", style: TextStyle(
+                                      color: AppColors.grey,
+                                      fontWeight: FontWeight.w500
+                                    ),),
+                                    GestureDetector(
+                                      onTap: () {
+                                        AppRoutes.register.stack(context);
+                                      },
+                                      child: const Text("Cadastre-se", style: TextStyle(
+                                        color: AppColors.blue,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.w500
+                                      ),),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),

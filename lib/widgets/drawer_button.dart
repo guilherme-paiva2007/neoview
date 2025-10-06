@@ -8,19 +8,23 @@ class AppDrawerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        Scaffold.of(context).openDrawer();
-      },
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: kScreenPadding,
-          ),
-          Center(child: FaIcon(FontAwesomeIcons.bars, color: AppColors.blue, size: 36,)),
-        ],
+    return Semantics(
+      button: true,
+      label: "Abrir menu de navegação",
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          Scaffold.of(context).openDrawer();
+        },
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: kScreenPadding,
+            ),
+            Center(child: FaIcon(FontAwesomeIcons.bars, color: AppColors.blue, size: 36,)),
+          ],
+        ),
       ),
     );
   }

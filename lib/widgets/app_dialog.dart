@@ -46,6 +46,7 @@ class AppDialog extends Dialog {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 8,
               children: actions,
             )
           ],

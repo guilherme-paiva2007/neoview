@@ -75,22 +75,24 @@ class _RegisterState extends State<Register> with WidgetsBindingObserver, Screen
               height: constraints.maxHeight,
               child: Stack(
                 children: [
-                  Container(
-                    height: keyboardClosed ? upper2 : 0,
-                    width: constraints.maxWidth,
-                    color: AppColors.blue,
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: 12,
-                        children: [
-                          Image.asset("assets/icons/white.png", width: 96,),
-                          const Text("NEOVIEW", style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.white,
-                          ),),
-                        ],
+                  ExcludeSemantics(
+                    child: Container(
+                      height: keyboardClosed ? upper2 : 0,
+                      width: constraints.maxWidth,
+                      color: AppColors.blue,
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          spacing: 12,
+                          children: [
+                            Image.asset("assets/icons/white.png", width: 96,),
+                            const Text("NEOVIEW", style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.white,
+                            ),),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -116,7 +118,10 @@ class _RegisterState extends State<Register> with WidgetsBindingObserver, Screen
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            const UnderlineText("Cadastrar"),
+                            Semantics(
+                              label: "Cadastre uma nova conta NeoView",
+                              child: const ExcludeSemantics(child: UnderlineText("Cadastrar"))
+                            ),
                           ],
                         ),
                         Column(
@@ -158,6 +163,7 @@ class _RegisterState extends State<Register> with WidgetsBindingObserver, Screen
                                     builder: (context, value, child) {
                                       return AppButton(
                                         enabled: value,
+                                        hint: "Preencha todos os campos para selecionar",
                                         onClick: (context) {
                                           AppRoutes.home.resetTo(context);
                                         },
@@ -168,24 +174,31 @@ class _RegisterState extends State<Register> with WidgetsBindingObserver, Screen
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Já possui uma conta? ", style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontWeight: FontWeight.w500
-                                ),),
-                                GestureDetector(
-                                  onTap: () {
-                                    AppRoutes.pop(context);
-                                  },
-                                  child: const Text("Entrar", style: TextStyle(
-                                    color: AppColors.blue,
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w500
-                                  ),),
-                                )
-                              ],
+                            Semantics(
+                              button: true,
+                              label: "Navegar para Entrar",
+                              onTap: () => AppRoutes.pop(context),
+                              child: ExcludeSemantics(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text("Já possui uma conta? ", style: TextStyle(
+                                      color: AppColors.grey,
+                                      fontWeight: FontWeight.w500
+                                    ),),
+                                    GestureDetector(
+                                      onTap: () {
+                                        AppRoutes.pop(context);
+                                      },
+                                      child: const Text("Entrar", style: TextStyle(
+                                        color: AppColors.blue,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.w500
+                                      ),),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),

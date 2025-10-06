@@ -22,12 +22,14 @@ class _InstructionsState extends State<Instructions> {
       onDrawerChanged: drawerNavigationStyler,
       appBar: AppAppBar(
         actions: [
-          AppButton(
-            small: true,
-            onClick: (context) {
-              
-            },
-            child: const Text("Conectar NeoView")
+          ExcludeSemantics(
+            child: AppButton(
+              small: true,
+              onClick: (context) {
+                AppRoutes.pair.popAndStack(context);
+              },
+              child: const Text("Conectar NeoView")
+            ),
           )
         ],
       ),
@@ -58,13 +60,16 @@ class _InstructionsState extends State<Instructions> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 16,
                   children: [
-                    const UnderlineText("Manual de Conexão"),
+                    Semantics(
+                      label: "Manual de conexão do óculos",
+                      child: const ExcludeSemantics(child: UnderlineText("Manual de Conexão"))
+                    ),
                     Image.asset("assets/images/photo_device_1.png", width: double.infinity,),
-                    const UnderlineText("Conheça mais sobre o NeoView"),
+                    const ExcludeSemantics(child: UnderlineText("Conheça mais sobre o NeoView")),
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 24),
                       child: Text(
-                        "O NeoView é um óculos inteligente desenvolvido para pessoas com deficiência visual. Utilizando visão computacional e recursos de acessibilidade, ele auxilia em tarefas do dia a dia, promovendo mais autonomia, segurança e inclusão.O NeoView é um óculos inteligente desenvolvido para pessoas com deficiência visual. Utilizando visão computacional e recursos de acessibilidade, ele auxilia em tarefas do dia a dia, promovendo mais autonomia, segurança e inclusão.",
+                        "O NeoView é um óculos inteligente desenvolvido para pessoas com deficiência visual. Utilizando visão computacional e recursos de acessibilidade, ele auxilia em tarefas do dia a dia, promovendo mais autonomia, segurança e inclusão.",
                         style: AppTextStyles.mainText,
                       ),
                     ),
@@ -84,23 +89,28 @@ class _InstructionsState extends State<Instructions> {
                   children: [
                     const UnderlineText("Passo a passo"),
                     const _InstructionCard(
-                      title: "1. Ligue o NeoView",
+                      index: 1,
+                      title: "Ligue o NeoView",
                       text: "Pressione o botão lateral até ouvir o sinal sonoro."
                     ),
                     const _InstructionCard(
-                      title: "2. Ative o Wi-Fi do celular",
+                      index: 2,
+                      title: "Ative o Wi-Fi do celular",
                       text: "Entre nas configurações e verifique as redes disponíveis."
                     ),
                     const _InstructionCard(
-                      title: "3. Abra o aplicativo NeoView",
+                      index: 3,
+                      title: "Abra o aplicativo NeoView",
                       text: "Entre em Conectar NeoView e procure pela rede do seu óculos."
                     ),
                     const _InstructionCard(
-                      title: "4. Selecione seu óculos",
+                      index: 4,
+                      title: "Selecione seu óculos",
                       text: "Conecte-se ao seu óculos, exibindo uma nova tela com suas informações."
                     ),
                     const _InstructionCard(
-                      title: "5. Conexão concluída!",
+                      index: 5,
+                      title: "Conexão concluída!",
                       text: "Seu óculos já está pronto para ser usado."
                     ),
                     const SizedBox(),
@@ -109,7 +119,7 @@ class _InstructionsState extends State<Instructions> {
                         Expanded(
                           child: AppButton(
                             onClick: (context) {
-                              
+                              AppRoutes.pair.popAndStack(context);
                             },
                             child: const Text("Conectar NeoView")
                           ),
@@ -130,30 +140,52 @@ class _InstructionsState extends State<Instructions> {
 class _InstructionCard extends StatelessWidget {
   final String title;
   final String text;
+  final int index;
 
   const _InstructionCard({
+    required this.index,
     required this.title,
     required this.text,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        borderRadius: AppBorderRadius.medium,
-      ),
-      padding: AppPaddings.bigger,
-      child: Column(
-        spacing: 16,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),),
-          Text(text, style: AppTextStyles.mainText,),
-        ],
+    return MergeSemantics(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: AppBorderRadius.medium,
+        ),
+        padding: AppPaddings.bigger,
+        child: Column(
+          spacing: 16,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.black
+                ),
+                children: [
+                  TextSpan(
+                    text: "$index. ",
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blue
+                    ),
+                  ),
+                  TextSpan(
+                    text: title,
+                  )
+                ]
+              ),
+            ),
+            Text(text, style: AppTextStyles.mainText,),
+          ],
+        ),
       ),
     );
   }

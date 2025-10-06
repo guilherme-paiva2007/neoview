@@ -7,11 +7,12 @@ class AppButton extends StatelessWidget {
   final bool enabled;
   final bool hollow;
   final bool small;
+  final String? hint;
   final Widget child;
   final void Function(BuildContext context) onClick;
   
-  const AppButton({ super.key, this.enabled = true, this.small = false, required this.onClick, this.hollow = false, required this.child });
-  const factory AppButton.squared({ Key key, bool enabled, required void Function(BuildContext) onClick, bool hollow, required Widget child }) = _AppSquaredButton;
+  const AppButton({ super.key, this.enabled = true, this.small = false, this.hint, required this.onClick, this.hollow = false, required this.child });
+  const factory AppButton.squared({ Key key, bool enabled, required void Function(BuildContext) onClick, String? hint, bool hollow, required Widget child }) = _AppSquaredButton;
 
   ButtonStyle get _style => hollow
     ? (small ? _borderButtonStyleSmallPadding : _borderButtonStyle)
@@ -19,10 +20,15 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: enabled ? () => onClick(context) : null,
-      style: _style,
-      child: child
+    return MergeSemantics(
+      child: Semantics(
+        hint: enabled ? null : hint,
+        child: ElevatedButton(
+          onPressed: enabled ? () => onClick(context) : null,
+          style: _style,
+          child: child
+        ),
+      ),
     );
   }
 }
@@ -40,6 +46,7 @@ class _AppSquaredButton extends AppButton {
     super.key,
     super.enabled,
     super.hollow,
+    super.hint,
     required super.onClick,
     required super.child
   }): super();

@@ -27,7 +27,7 @@ class AppDialog extends Dialog {
       ),
       child: Container(
         width: double.infinity,
-        padding: AppPaddings.medium,
+        padding: AppPaddings.big,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 8,
